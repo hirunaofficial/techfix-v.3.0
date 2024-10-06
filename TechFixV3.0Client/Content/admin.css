@@ -1,132 +1,154 @@
-﻿/* admin.css */
-
+﻿/* Global Styling */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
+    background-color: #f4f9fc;
 }
 
 .header {
-    background-color: #007bff;
+    background-color: #2c3e50;
     color: white;
-    padding: 15px;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-    .header .logo h1 {
-        margin: 0;
-    }
+.header .logo h1 {
+    margin: 0;
+}
 
-    .header .logout {
-        margin-right: 20px;
-    }
+.header .logout {
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.header .logout:hover {
+    text-decoration: underline;
+}
 
 .navbar {
-    background-color: #333;
+    background-color: #34495e;
     overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-    .navbar ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-    }
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
 
-        .navbar ul li {
-            float: left;
-        }
+.navbar ul li {
+    float: left;
+}
 
-            .navbar ul li a {
-                display: block;
-                color: white;
-                text-align: center;
-                padding: 14px 20px;
-                text-decoration: none;
-            }
+.navbar ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
 
-                .navbar ul li a:hover {
-                    background-color: #575757;
-                }
+.navbar ul li a:hover {
+    background-color: #16a085;
+}
 
 .content {
     padding: 20px;
 }
-
 
 /* Dashboard specific styling */
 .admin-sections {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+    gap: 20px;
 }
 
 .section {
     width: 30%;
-    background-color: #f1f1f1;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-    .section h3 {
-        color: #333;
-    }
+.section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
 
-    .section p {
-        color: #666;
-    }
+.section h3 {
+    color: #34495e;
+}
 
-    .section .btn {
-        display: inline-block;
-        padding: 10px 15px;
-        margin-top: 10px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 4px;
-    }
+.section p {
+    color: #7f8c8d;
+}
 
-        .section .btn:hover {
-            background-color: #0056b3;
-        }
+.section .btn {
+    display: inline-block;
+    padding: 12px 20px;
+    margin-top: 10px;
+    background-color: #16a085;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
 
-
+.section .btn:hover {
+    background-color: #1abc9c;
+}
 
 /* Form Styling */
 .add-user-section, .user-list-section {
     margin-bottom: 30px;
 }
 
-    .add-user-section h3, .user-list-section h3 {
-        margin-bottom: 15px;
-    }
+.add-user-section h3, .user-list-section h3 {
+    margin-bottom: 15px;
+}
 
 .form-group {
     margin-bottom: 15px;
 }
 
 .input-field {
-    width: 100%;
-    padding: 10px;
+    width: calc(100% - 20px);
+    padding: 12px;
     margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid #bdc3c7;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #1abc9c;
+    box-shadow: 0 0 8px rgba(26, 188, 156, 0.5);
 }
 
 .submit-button {
-    padding: 10px 15px;
-    background-color: #007bff;
+    background-color: #16a085;
     color: white;
     border: none;
-    border-radius: 4px;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
     .submit-button:hover {
-        background-color: #0056b3;
+        background-color: #1abc9c;
     }
 
 /* Table Styling */
@@ -136,11 +158,20 @@ body {
     margin-top: 20px;
 }
 
-    .table th, .table td {
-        padding: 10px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
+.table th, .table td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ecf0f1;
+}
+
+.table th {
+    background-color: #bdc3c7;
+    color: #34495e;
+}
+
+.table tr:hover {
+    background-color: #ecf0f1;
+}
 
 /* Modal Styling */
 .modal {
@@ -151,7 +182,8 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.6);
+    animation: fadeIn 0.3s ease;
 }
 
 .modal-content {
@@ -159,7 +191,9 @@ body {
     margin: 100px auto;
     padding: 20px;
     width: 400px;
-    border-radius: 8px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.3s ease;
 }
 
 .close {
@@ -169,66 +203,27 @@ body {
     cursor: pointer;
 }
 
-    .close:hover {
-        color: #000;
-    }
-
-
-
-/* Form Styling */
-.form-group {
-    margin-bottom: 15px;
+.close:hover {
+    color: #333;
 }
 
-.input-field {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.submit-button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-    .submit-button:hover {
-        background-color: #0056b3;
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
     }
 
-/* Table Styling */
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+    to {
+        opacity: 1;
+    }
 }
 
-    .table th, .table td {
-        padding: 10px;
-        text-align: left;
-        border: 1px solid #ddd;
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
     }
 
-
-
-/* Table Styling */
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+    to {
+        transform: translateY(0);
+    }
 }
-
-    .table th, .table td {
-        padding: 10px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
-
-    .table th {
-        background-color: #f2f2f2;
-    }

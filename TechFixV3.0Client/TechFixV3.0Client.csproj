@@ -372,7 +372,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>7549</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44398/</IISUrl>
+          <IISUrl>https://localhost:44326/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
