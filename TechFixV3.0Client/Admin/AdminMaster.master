@@ -13,7 +13,7 @@
                 <h1>TechFix - Admin Dashboard</h1>
             </div>
             <div class="logout">
-                <asp:Button ID="LogoutButton" runat="server" Text="Logout" OnClick="LogoutButton_Click" />
+                <asp:Button ID="LogoutButton" runat="server" Text="Logout" CssClass="submit-button" OnClick="LogoutButton_Click" />
             </div>
         </div>
         
