@@ -6,77 +6,82 @@ body {
     padding: 0;
 }
 
+/* Login Container */
 .login-container {
-    max-width: 450px;
-    margin: 100px auto;
-    padding: 30px;
+    max-width: 500px;
+    margin: 80px auto;
+    padding: 40px;
     background-color: #ffffff;
-    border-radius: 12px;
+    border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     animation: fadeIn 0.7s ease-in-out;
     transition: all 0.3s ease;
+    transform: translateY(0);
 }
 
 .techfix-info {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     animation: slideDown 0.6s ease-in-out;
 }
 
-.techfix-info h1 {
-    font-size: 32px;
-    color: #2c3e50;
-    margin-bottom: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    animation: fadeInText 1s ease;
-}
+    .techfix-info h1 {
+        font-size: 36px;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        animation: fadeInText 1s ease;
+    }
 
-.techfix-info p {
-    font-size: 16px;
-    color: #7f8c8d;
-    margin: 0;
-    padding: 0 20px;
-    line-height: 1.6;
-    animation: fadeInText 1.2s ease;
-}
+    .techfix-info p {
+        font-size: 17px;
+        color: #7f8c8d;
+        margin: 0;
+        padding: 0 20px;
+        line-height: 1.8;
+        animation: fadeInText 1.2s ease;
+    }
 
+/* Login Form */
 .login-form h2 {
     text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 26px;
+    margin-bottom: 25px;
     color: #34495e;
     font-weight: 600;
+    animation: fadeInText 0.8s ease;
 }
 
 .input-group {
     margin-bottom: 20px;
 }
 
-.input-group label {
-    display: block;
-    font-size: 15px;
-    margin-bottom: 5px;
-    color: #555;
-    font-weight: 500;
-}
+    .input-group label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 6px;
+        color: #555;
+        font-weight: 500;
+    }
 
 .input-field {
     width: calc(100% - 20px);
-    padding: 12px;
+    padding: 14px;
     border: 1px solid #bdc3c7;
-    border-radius: 8px;
-    font-size: 15px;
+    border-radius: 12px;
+    font-size: 16px;
     color: #333;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.input-field:focus {
-    outline: none;
-    border-color: #1abc9c;
-    box-shadow: 0 0 10px rgba(26, 188, 156, 0.6);
-}
+    .input-field:focus {
+        outline: none;
+        border-color: #1abc9c;
+        box-shadow: 0 0 12px rgba(26, 188, 156, 0.6);
+    }
 
+/* Button Styling */
 .login-button {
     text-align: center;
 }
@@ -85,9 +90,9 @@ body {
     background-color: #1abc9c;
     color: white;
     border: none;
-    padding: 12px 25px;
-    border-radius: 8px;
-    font-size: 16px;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 17px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -96,16 +101,17 @@ body {
     animation: fadeInButton 1.2s ease;
 }
 
-.submit-button:hover {
-    background-color: #16a085;
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(22, 160, 133, 0.3);
-}
+    .submit-button:hover {
+        background-color: #16a085;
+        transform: scale(1.05);
+        box-shadow: 0 6px 18px rgba(22, 160, 133, 0.3);
+    }
 
-.submit-button:active {
-    transform: scale(0.98);
-}
+    .submit-button:active {
+        transform: scale(0.98);
+    }
 
+/* Error Message */
 .error-message {
     color: #e74c3c;
     text-align: center;
@@ -117,24 +123,91 @@ body {
 /* Responsive Styling */
 @media (max-width: 480px) {
     .login-container {
-        padding: 20px;
+        padding: 25px;
         margin: 60px auto;
     }
 
     .input-field {
         width: calc(100% - 12px);
-        padding: 10px;
+        padding: 12px;
     }
 
     .submit-button {
-        padding: 10px 20px;
+        padding: 12px 20px;
     }
 
     .techfix-info h1 {
-        font-size: 26px;
+        font-size: 28px;
     }
 
     .login-form h2 {
-        font-size: 20px;
+        font-size: 22px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInText {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInButton {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes shakeError {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
     }
 }
