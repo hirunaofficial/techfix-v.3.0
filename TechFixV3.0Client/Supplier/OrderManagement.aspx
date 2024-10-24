@@ -30,7 +30,12 @@
                 </asp:TemplateField>
 
                 <asp:BoundField DataField="ItemName" HeaderText="Item Name" />
-                <asp:BoundField DataField="Quantity" HeaderText="Ordered Quantity" />
+
+                <asp:TemplateField HeaderText="Ordered Quantity">
+                    <ItemTemplate>
+                        <asp:Label ID="QuantityLabel" runat="server" Text='<%# Eval("Quantity") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
 
                 <asp:TemplateField HeaderText="Order Status">
                     <ItemTemplate>

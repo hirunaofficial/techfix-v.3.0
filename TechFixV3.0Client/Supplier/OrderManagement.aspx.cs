@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TechFixV3._0Client.OrdersServiceReference; // Ensure the service reference is correct
-using TechFixV3._0Client.InventoryServiceReference; // Add reference to InventoryService
+using TechFixV3._0Client.OrdersServiceReference;
+using TechFixV3._0Client.InventoryServiceReference;
 
 namespace TechFixV3._0Client.Supplier
 {
@@ -29,7 +29,7 @@ namespace TechFixV3._0Client.Supplier
             {
                 // Fetch item name using the inventory service
                 var inventoryItem = inventoryService.GetInventoryById(order.ItemId);
-                order.ItemName = inventoryItem?.ItemName ?? "Unknown"; // Set item name
+                order.ItemName = inventoryItem?.ItemName ?? "Unknown";
             }
             // Bind the orders to the GridView
             OrdersGridView.DataSource = orders;
@@ -53,9 +53,16 @@ namespace TechFixV3._0Client.Supplier
                 Label itemIdLabel = (Label)row.FindControl("ItemIdLabel");
                 Label quantityLabel = (Label)row.FindControl("QuantityLabel");
 
+                // Check for nulls and avoid NullReferenceException
+                if (adminIdLabel == null || supplierIdLabel == null || itemIdLabel == null || quantityLabel == null)
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error: Unable to retrieve order details.');", true);
+                    return;
+                }
+
                 // Get the selected status and other required values
                 string newStatus = statusDropDown.SelectedValue;
-                int adminId = Convert.ToInt32(adminIdLabel.Text); // Get from the label or other control in your GridView
+                int adminId = Convert.ToInt32(adminIdLabel.Text);
                 int supplierId = Convert.ToInt32(supplierIdLabel.Text);
                 int itemId = Convert.ToInt32(itemIdLabel.Text);
                 int quantity = Convert.ToInt32(quantityLabel.Text);
@@ -79,7 +86,7 @@ namespace TechFixV3._0Client.Supplier
                 return int.Parse(Request.Cookies["UserId"].Value);
             }
 
-            return 0; // Default value if not found
+            return 0;
         }
     }
 }
