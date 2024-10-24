@@ -30,44 +30,43 @@
 
     <!-- Display Selected Supplier Products Table Section -->
     <div class="supplier-products-section">
-        <h3>Supplier Products</h3>
-        <asp:GridView ID="SupplierProductsGridView" runat="server" AutoGenerateColumns="False" CssClass="table">
-            <Columns>
-                <asp:BoundField DataField="ProductId" HeaderText="Product ID" />
-                <asp:BoundField DataField="SupplierId" HeaderText="Supplier ID" />
-                <asp:TemplateField HeaderText="Product Name">
-                    <ItemTemplate>
-                        <%# Eval("ItemName") %>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Quantity">
-                    <ItemTemplate>
-                        <%# Eval("Quantity") %>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Price">
-                    <ItemTemplate>
-                        <%# Eval("Price") %>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField HeaderText="Discount">
-                    <ItemTemplate>
-                        <%# Eval("Discount") %>
-                    </ItemTemplate>
-                </asp:TemplateField>
-            </Columns>
-        </asp:GridView>
+        <h3>Products</h3>
+        <!-- Scrollable Div for Products Table -->
+        <div style="overflow-y: auto; height: 500px;">
+            <asp:GridView ID="SupplierProductsGridView" runat="server" AutoGenerateColumns="False" CssClass="table">
+                <Columns>
+                    <asp:BoundField DataField="ProductId" HeaderText="Product ID" />
+                    <asp:BoundField DataField="SupplierId" HeaderText="Supplier ID" />
+                    <asp:TemplateField HeaderText="Product Name">
+                        <ItemTemplate>
+                            <%# Eval("ItemName") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Quantity">
+                        <ItemTemplate>
+                            <%# Eval("Quantity") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Price (LKR)">
+                        <ItemTemplate>
+                            <%# Eval("Price") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Discount">
+                        <ItemTemplate>
+                            <%# Eval("Discount") %>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
+        </div>
     </div>
 
     <!-- Display Inventory Table Section -->
     <div class="inventory-section">
         <h3>Inventory</h3>
-        <asp:GridView ID="InventoryGridView" runat="server" AutoGenerateColumns="False" CssClass="table" 
-            OnRowEditing="InventoryGridView_RowEditing" 
-            OnRowDeleting="InventoryGridView_RowDeleting" 
-            OnRowCancelingEdit="InventoryGridView_RowCancelingEdit"
-            OnRowUpdating="InventoryGridView_RowUpdating"
-            DataKeyNames="ItemId">
+        <asp:GridView ID="InventoryGridView" runat="server" AutoGenerateColumns="False" CssClass="table"
+            OnRowDeleting="InventoryGridView_RowDeleting" DataKeyNames="ItemId">
             <Columns>
                 <asp:BoundField DataField="ItemId" HeaderText="Item ID" />
                 <asp:TemplateField HeaderText="Item Name">
@@ -79,32 +78,23 @@
                     <ItemTemplate>
                         <%# Eval("Quantity") %>
                     </ItemTemplate>
-                    <EditItemTemplate>
-                        <asp:TextBox ID="QuantityTextBox" runat="server" Text='<%# Bind("Quantity") %>' />
-                    </EditItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Price">
+                <asp:TemplateField HeaderText="Price (LKR)">
                     <ItemTemplate>
                         <%# Eval("Price") %>
                     </ItemTemplate>
-                    <EditItemTemplate>
-                        <asp:TextBox ID="PriceTextBox" runat="server" Text='<%# Bind("Price") %>' ReadOnly="true" />
-                    </EditItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Discount">
                     <ItemTemplate>
                         <%# Eval("Discount") %>
                     </ItemTemplate>
-                    <EditItemTemplate>
-                        <asp:TextBox ID="DiscountTextBox" runat="server" Text='<%# Bind("Discount") %>' ReadOnly="true" />
-                    </EditItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Supplier ID">
                     <ItemTemplate>
                         <%# Eval("SupplierId") %>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:CommandField ShowEditButton="True" ShowDeleteButton="True" />
+                <asp:CommandField ShowDeleteButton="True" />
             </Columns>
         </asp:GridView>
     </div>

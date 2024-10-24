@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TechFixV3._0Client.InventoryServiceReference; // Link to the InventoryServiceReference
-using TechFixV3._0Client.ProductServiceReference; // Link to the ProductServiceReference
-using TechFixV3._0Client.UserServiceReference; // Link to the UserServiceReference
+using TechFixV3._0Client.InventoryServiceReference;
+using TechFixV3._0Client.ProductServiceReference;
+using TechFixV3._0Client.UserServiceReference;
+using TechFixV3._0Client.OrdersServiceReference;
 
 namespace TechFixV3._0Client.Admin
 {
     public partial class ManageInventory : System.Web.UI.Page
     {
         private InventoryServiceSoapClient inventoryService = new InventoryServiceSoapClient();
-        private ProductServiceSoapClient productService = new ProductServiceSoapClient(); // Create an instance of ProductService
-        private UserServiceSoapClient userService = new UserServiceSoapClient(); // Create an instance of UserService
+        private ProductServiceSoapClient productService = new ProductServiceSoapClient();
+        private UserServiceSoapClient userService = new UserServiceSoapClient();
+        private OrdersServiceSoapClient ordersService = new OrdersServiceSoapClient();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -97,47 +99,83 @@ namespace TechFixV3._0Client.Admin
         {
             if (IsValidInput())
             {
-                string itemName = NewItemDropDown.SelectedItem.Text; // Get the selected item name
+                string itemName = NewItemDropDown.SelectedItem.Text;
                 int quantity = int.Parse(NewQuantityTextBox.Text);
-                decimal price = decimal.Parse(NewPriceTextBox.Text);
+                decimal pricePerUnit = decimal.Parse(NewPriceTextBox.Text);
                 decimal discount = decimal.Parse(NewDiscountTextBox.Text);
-                int supplierId = int.Parse(SupplierDropDown.SelectedValue); // Get selected supplier ID
+                int supplierId = int.Parse(SupplierDropDown.SelectedValue);
 
-                string result = inventoryService.AddInventoryItem(itemName, quantity, price, discount, supplierId);
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('" + result + "');", true);
+                // Calculate total price by multiplying the unit price by quantity
+                decimal totalPrice = pricePerUnit * quantity;
 
-                BindInventoryGrid();
+                // Check current stock
+                int selectedProductId = int.Parse(NewItemDropDown.SelectedValue);
+                var product = productService.GetProductById(selectedProductId);
+
+                if (product != null && quantity > product.Quantity)
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error: Requested quantity exceeds available stock. Current stock is " + product.Quantity + ".');", true);
+                    return;
+                }
+
+                try
+                {
+                    // Proceed to add the item if quantity is valid
+                    string inventoryResult = inventoryService.AddInventoryItem(itemName, quantity, totalPrice, discount, supplierId);
+                    if (inventoryResult.ToLower().Contains("success"))
+                    {
+                        int adminId = GetAdminIdFromCookies();
+                        if (adminId == 0)
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error: Admin ID is not set. Please login again.');", true);
+                            return;
+                        }
+
+                        // Log for debugging
+                        System.Diagnostics.Debug.WriteLine($"Attempting to create order - AdminID: {adminId}, SupplierID: {supplierId}, ProductID: {selectedProductId}, Quantity: {quantity}, Status: Pending");
+
+                        string orderStatus = "Pending";
+                        string orderResult = ordersService.AddOrder(adminId, supplierId, selectedProductId, quantity, orderStatus);
+
+                        if (orderResult.ToLower().Contains("success"))
+                        {
+                            // Reduce the product stock
+                            int updatedQuantity = product.Quantity - quantity;
+                            string updateResult = productService.UpdateProduct(selectedProductId, product.ItemName, updatedQuantity, product.Price, product.Discount, product.SupplierId);
+
+                            if (updateResult.ToLower().Contains("success"))
+                            {
+                                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Inventory and Order added successfully. Stock updated.');", true);
+                            }
+                            else
+                            {
+                                // Rollback inventory addition if stock update fails
+                                inventoryService.DeleteInventoryItem(selectedProductId);
+                                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Failed to update product stock. Please check the system. Inventory addition rolled back.');", true);
+                            }
+                        }
+                        else
+                        {
+                            // Rollback inventory addition if order creation fails
+                            inventoryService.DeleteInventoryItem(selectedProductId);
+                            System.Diagnostics.Debug.WriteLine($"Failed to create order: {orderResult}. Please check if admin, supplier, and product are correctly set.");
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('Failed to create order: {orderResult}. Please check if admin, supplier, and product are correctly set.');", true);
+                        }
+                    }
+                    else
+                    {
+                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Failed to add inventory item: " + inventoryResult + "');", true);
+                    }
+
+                    // Refresh grids
+                    BindSupplierProductsGrid();
+                    BindInventoryGrid();
+                }
+                catch (Exception ex)
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('An error occurred: " + ex.Message + "');", true);
+                }
             }
-        }
-
-        protected void InventoryGridView_RowEditing(object sender, GridViewEditEventArgs e)
-        {
-            InventoryGridView.EditIndex = e.NewEditIndex;
-            BindInventoryGrid();
-        }
-
-        protected void InventoryGridView_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-        {
-            InventoryGridView.EditIndex = -1;
-            BindInventoryGrid();
-        }
-
-        protected void InventoryGridView_RowUpdating(object sender, GridViewUpdateEventArgs e)
-        {
-            // Retrieve the Item ID from DataKey
-            int itemId = (int)InventoryGridView.DataKeys[e.RowIndex].Value;
-
-            // Retrieve the updated values from the GridView
-            GridViewRow row = InventoryGridView.Rows[e.RowIndex];
-            int quantity = int.Parse(((TextBox)row.FindControl("QuantityTextBox")).Text);
-
-            // Call the web service to update the inventory item
-            string result = inventoryService.UpdateInventory(itemId, quantity, 0, 0, 0); // Price and discount are not editable
-            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('" + result + "');", true);
-
-            // Set GridView back to normal mode
-            InventoryGridView.EditIndex = -1;
-            BindInventoryGrid(); // Refresh the GridView
         }
 
         protected void InventoryGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
@@ -145,12 +183,49 @@ namespace TechFixV3._0Client.Admin
             // Retrieve the Item ID from DataKey
             int itemId = (int)InventoryGridView.DataKeys[e.RowIndex].Value;
 
-            // Call the web service to delete the inventory item
+            // Get the current inventory item details
+            var inventoryItem = inventoryService.GetInventoryById(itemId);
+            if (inventoryItem != null)
+            {
+                int productId = GetProductIdByItemName(inventoryItem.ItemName, inventoryItem.SupplierId);
+
+                if (productId > 0)
+                {
+                    // Increase the product stock by the quantity of the inventory item being deleted
+                    var product = productService.GetProductById(productId);
+                    if (product != null)
+                    {
+                        int updatedQuantity = product.Quantity + inventoryItem.Quantity;
+                        string updateResult = productService.UpdateProduct(productId, product.ItemName, updatedQuantity, product.Price, product.Discount, product.SupplierId);
+
+                        if (!updateResult.ToLower().Contains("success"))
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Failed to restore product stock.');", true);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            // Delete the inventory item
             string result = inventoryService.DeleteInventoryItem(itemId);
             ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('" + result + "');", true);
 
             // Refresh the GridView after deletion
             BindInventoryGrid();
+        }
+
+        private int GetProductIdByItemName(string itemName, int supplierId)
+        {
+            var products = productService.GetProductsBySupplierId(supplierId);
+            foreach (var product in products)
+            {
+                if (product.ItemName.Equals(itemName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return product.ProductId;
+                }
+            }
+            return 0;
         }
 
         private bool IsValidInput()
@@ -174,6 +249,16 @@ namespace TechFixV3._0Client.Admin
             }
 
             return true;
+        }
+
+        // Retrieve Admin ID from cookies
+        private int GetAdminIdFromCookies()
+        {
+            if (Request.Cookies["UserId"] != null)
+            {
+                return Convert.ToInt32(Request.Cookies["UserId"].Value);
+            }
+            return 0; // Return 0 if not found, meaning an error
         }
     }
 }
