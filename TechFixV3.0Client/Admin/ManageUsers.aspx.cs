@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TechFixV3._0Client.UserServiceReference; // Ensure the service reference is correct
+using TechFixV3._0Client.UserServiceReference;
 
 namespace TechFixV3._0Client.Admin
 {
@@ -17,12 +18,25 @@ namespace TechFixV3._0Client.Admin
             }
         }
 
-        private void BindUserGrid()
+        private void BindUserGrid(string searchUsername = "")
         {
-            // Fetch users and bind to the GridView
+            // Fetch users and filter based on search query if provided
             var users = userService.GetUsers();
+
+            if (!string.IsNullOrEmpty(searchUsername))
+            {
+                users = users.Where(u => u.Username.IndexOf(searchUsername, StringComparison.OrdinalIgnoreCase) >= 0).ToArray();
+            }
+
             UsersGridView.DataSource = users;
             UsersGridView.DataBind();
+        }
+
+        protected void SearchUserButton_Click(object sender, EventArgs e)
+        {
+            // Get the search query from the TextBox
+            string searchUsername = SearchUsernameTextBox.Text.Trim();
+            BindUserGrid(searchUsername);
         }
 
         protected void AddUserButton_Click(object sender, EventArgs e)
@@ -32,7 +46,7 @@ namespace TechFixV3._0Client.Admin
             {
                 string username = UsernameTextBox.Text;
                 string password = PasswordTextBox.Text;
-                string role = RoleDropDown.SelectedValue; // Role can be Admin or Supplier
+                string role = RoleDropDown.SelectedValue;
                 string location = LocationTextBox.Text;
                 string contact = ContactTextBox.Text;
                 string email = EmailTextBox.Text;
@@ -68,39 +82,26 @@ namespace TechFixV3._0Client.Admin
 
             // Retrieve the updated values from the GridView
             GridViewRow row = UsersGridView.Rows[e.RowIndex];
-
-            // Correctly cast controls from the row
             string username = ((TextBox)row.FindControl("UsernameTextBox")).Text;
-            string password = ((TextBox)row.FindControl("PasswordTextBox")).Text; // Allow password editing
-            string role = ((DropDownList)row.FindControl("RoleDropDown")).SelectedValue; // Role must be Admin or Supplier
+            string password = ((TextBox)row.FindControl("PasswordTextBox")).Text;
+            string role = ((DropDownList)row.FindControl("RoleDropDown")).SelectedValue;
             string location = ((TextBox)row.FindControl("LocationTextBox")).Text;
             string contact = ((TextBox)row.FindControl("ContactTextBox")).Text;
             string email = ((TextBox)row.FindControl("EmailTextBox")).Text;
 
-            // Validate role
-            if (role != "Admin" && role != "Supplier")
-            {
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Invalid role selected.');", true);
-                return;
-            }
-
             // Update the user via the web service
             string result = userService.UpdateUser(userId, username, password, role, username, location, contact, email);
-            // Display alert with the result message
             ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('" + result + "');", true);
 
             // Set GridView back to normal mode
             UsersGridView.EditIndex = -1;
-            BindUserGrid(); // Refresh the GridView
+            BindUserGrid();
         }
 
         protected void UsersGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            // Retrieve the User ID from DataKey
             int userId = (int)UsersGridView.DataKeys[e.RowIndex].Value;
-            // Delete the user via the web service
             string result = userService.DeleteUser(userId);
-            // Display alert with the result message
             ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('" + result + "');", true);
 
             // Refresh the GridView after deletion
@@ -109,7 +110,6 @@ namespace TechFixV3._0Client.Admin
 
         private bool IsValidInput()
         {
-            // Check if all required fields are filled out
             if (string.IsNullOrWhiteSpace(UsernameTextBox.Text) ||
                 string.IsNullOrWhiteSpace(PasswordTextBox.Text) ||
                 string.IsNullOrWhiteSpace(LocationTextBox.Text) ||
@@ -120,7 +120,6 @@ namespace TechFixV3._0Client.Admin
                 return false;
             }
 
-            // Validate email format
             if (!System.Text.RegularExpressions.Regex.IsMatch(EmailTextBox.Text, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
                 ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Invalid email format.');", true);

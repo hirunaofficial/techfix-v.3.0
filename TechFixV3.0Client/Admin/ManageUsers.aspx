@@ -3,6 +3,16 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <h2>Manage Users</h2>
 
+    <!-- Search Section -->
+    <div class="search-user-section">
+        <div class="form-group">
+            <asp:TextBox ID="SearchUsernameTextBox" runat="server" CssClass="input-field" placeholder="Search by Username..." />
+        </div>
+        <div class="form-group">
+            <asp:Button ID="Button1" runat="server" Text="Search" CssClass="submit-button" OnClick="SearchUserButton_Click" />
+        </div>
+    </div>
+
     <!-- Display Users Section -->
     <div class="user-list-section">
         <h3>Users</h3>
@@ -70,7 +80,7 @@
         </asp:GridView>
     </div>
 
-        <!-- Add New User Section -->
+    <!-- Add New User Section -->
     <div class="add-user-section">
         <h3>Add New User</h3>
         <asp:Label ID="MessageLabel" runat="server" ForeColor="Red" />
@@ -111,5 +121,4 @@
             <asp:Button ID="AddUserButton" runat="server" Text="Add User" CssClass="submit-button" OnClick="AddUserButton_Click" />
         </div>
     </div>
-
 </asp:Content>
