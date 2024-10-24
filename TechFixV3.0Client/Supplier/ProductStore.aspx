@@ -27,15 +27,27 @@
         </div>
     </div>
 
-    <!-- Display Stock Section with Inline Editing -->
+    <!-- Display Stock Section with Search and Inline Editing -->
     <div class="stock-details-section">
         <h3>Stock Details</h3>
+        
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <div class="form-group">
+                <asp:TextBox ID="SearchTextBox" runat="server" CssClass="input-field" placeholder="Search items..." />
+            </div>
+            <div class="form-group">
+                <asp:Button ID="SearchButton" runat="server" Text="Search" CssClass="submit-button" OnClick="SearchButton_Click" />
+            </div>
+        </div>
+
+        <!-- GridView for Stock Details -->
         <asp:GridView ID="StockGridView" runat="server" AutoGenerateColumns="False" CssClass="table" DataKeyNames="ProductId" OnRowEditing="StockGridView_RowEditing" OnRowCancelingEdit="StockGridView_RowCancelingEdit" OnRowUpdating="StockGridView_RowUpdating" OnRowDeleting="StockGridView_RowDeleting">
             <Columns>
                 <asp:BoundField DataField="ProductId" HeaderText="Product ID" ReadOnly="True" />
                 <asp:BoundField DataField="ItemName" HeaderText="Item Name" />
                 <asp:BoundField DataField="Quantity" HeaderText="Available Quantity" />
-                <asp:BoundField DataField="Price" HeaderText="Price per Unit" DataFormatString="{0:C}" />
+                <asp:BoundField DataField="Price" HeaderText="Price per Unit" DataFormatString="LKR {0:N2}" />
                 <asp:BoundField DataField="Discount" HeaderText="Discount (%)" />
                 <asp:CommandField ShowEditButton="True" ShowDeleteButton="True" />
             </Columns>
