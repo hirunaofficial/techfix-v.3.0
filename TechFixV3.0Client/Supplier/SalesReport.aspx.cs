@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TechFixV3._0Client.ReportsServiceReference; // Add reference to ReportsService
+using TechFixV3._0Client.ReportsServiceReference;
 
 namespace TechFixV3._0Client.Supplier
 {
@@ -35,7 +35,9 @@ namespace TechFixV3._0Client.Supplier
             {
                 totalRevenue += salesReportItem.TotalSales;
             }
-            TotalRevenueLabel.Text = totalRevenue.ToString("C"); // Format as currency
+
+            // Display the total revenue in LKR
+            TotalRevenueLabel.Text = $"LKR {totalRevenue:N2}";
         }
 
         // Helper method to retrieve SupplierID from cookies
