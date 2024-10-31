@@ -86,7 +86,7 @@ TechFix3.0/
 
 ## License
 
-This project is licensed under the GPL-3.0 License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
 ### Contact
 
